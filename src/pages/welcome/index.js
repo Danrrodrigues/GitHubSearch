@@ -1,9 +1,15 @@
 //import liraries
 import React, { Component } from 'react';
 import { NavigationActions } from 'react-navigation';
-import { View, Text , TextInput, TouchableOpacity} from 'react-native';
+import { 
+    View, 
+    Text , 
+    TextInput, 
+    TouchableOpacity, 
+    AsyncStorage,
+    ActivityIndicator} from 'react-native';
 import PropTypes from 'prop-types';
-
+import api from '../../services/api';
 import styles from './styles';
 
 // create a component
@@ -18,15 +24,44 @@ export default class Welcome extends Component {
         header: null,
     };
 
+    state = {
+        username: '',
+        loading: false,
+        error: false
+    };
+
+    checkAndSaveUser = async () =>{
+        const response = await api.get(`/users/${this.state.username}`);
+
+        if (!response.ok) throw Error();
+
+        await AsyncStorage.setItem('@Githubsearch:username', this.state.username);
+    };
+
+
     navigateToUser = () => {
-        const { dispatch } = this.props.navigation;
-        const resetAction = NavigationActions.reset({
-            index:0,
-            actions:[
-                NavigationActions.navigate({ routeName: 'User'})
-            ]
-        })
-        dispatch(resetAction);
+        if (this.state.username.length === 0) return;
+        // Checar API se usuário existe
+        // Salvar usuário no storage
+        this.setState({ loading: true, error: false});
+
+        this.checkAndSaveUser()
+            .then(() => {
+                
+                 // Redirecionar
+                const { dispatch } = this.props.navigation;
+                const resetAction = NavigationActions.reset({
+                    index:0,
+                    actions:[
+                        NavigationActions.navigate({ routeName: 'User'})
+                    ]
+                })
+                dispatch(resetAction);
+            })
+            .catch(() => {
+                this.setState({ error: true, loading: false });
+            });
+  
     };
 
 
@@ -38,13 +73,21 @@ export default class Welcome extends Component {
                     Para continuar, precisamos que você informe seu usuário no GitHub
                 </Text>
 
+                {this.state.error && <Text style={styles.error}>Esse usuário não existe</Text> }
+
                 <TextInput 
+                    autoCapitalize="none"
+                    autoCorrect={false}
                     style={styles.imput}
                     placeholder="Digite seu usuário"
+                    onChangeText={(username) => { this.setState({ username }); }}
                 />
 
                 <TouchableOpacity style={styles.button} onPress={this.navigateToUser}>
-                    <Text style={styles.buttonText}>Prosseguir</Text>
+                    { this.state.loading
+                    ? <ActivityIndicator size="small" color="#FFF"/>
+                    :<Text style={styles.buttonText}>Prosseguir</Text>
+                    }
                 </TouchableOpacity>
 
             </View>
