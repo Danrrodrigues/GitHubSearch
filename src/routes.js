@@ -4,7 +4,8 @@ import Welcome from './pages/welcome';
 import Repositories from './pages/repositories';
 import Organizations from './pages/organizations';
 
-const Routes = StackNavigator({
+const createRootNavigator = (userExists = false) =>
+StackNavigator({
     Welcome: { screen: Welcome },
     User: { 
         screen: TabNavigator({
@@ -13,7 +14,7 @@ const Routes = StackNavigator({
         }),
     },
 },{
-    initialRouteName:'Welcome',
+    initialRouteName: userExists ? 'User' : 'Welcome',
 });
 
-export default Routes;
+export default createRootNavigator;
