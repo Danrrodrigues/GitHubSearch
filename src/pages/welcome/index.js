@@ -89,7 +89,7 @@ export default class Welcome extends Component {
                     :<Text style={styles.buttonText}>Prosseguir</Text>
                     }
                 </TouchableOpacity>
-
+                <Text style={styles.welcomeDescription}> Desenvolvido por Danilo A. Rodrigues :)</Text> 
             </View>
         );
     }
