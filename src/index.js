@@ -28,7 +28,7 @@ export default class App extends Component{
 
   // renderiza objetos na tela
   render() {
-    // retorna variavéis com seu devidos valores já preenchidos antes
+    // retorna variaveis com seus devidos valores já preenchidos antes
     const { userChecked, userExists } = this.state;
 
     //console.tron.log(userChecked);
