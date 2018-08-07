@@ -20,7 +20,7 @@ export default class App extends Component{
   }
   // Verificar sem tem usuário salvo no storage
   checkUser = async () => {
-    const user = await AsyncStorage.getItem('@Githubsearch:username');
+    const user = await AsyncStorage.getItem('@costben:username');
      
     // retorna verdadeiro caso haja usuário salvo
     return user !== null;

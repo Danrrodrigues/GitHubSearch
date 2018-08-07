@@ -50,7 +50,7 @@ export default class Repositories extends Component {
                 />
             }
             data={this.state.repositories}
-            keyExtractor={repository => repository.id}
+            keyExtractor={(repository, index) => index.toString ()}
             renderItem={({ item }) =><Repository repository={item}/>}
          />
         
